@@ -8,6 +8,9 @@ from analysis.error_analysis import error_over_time
 from analysis.model_comparison import model_comparison_table
 from analysis.error_heatmap import mape_heatmap
 
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 
 
 DATA_PATH = "data/energyconsumption.csv"

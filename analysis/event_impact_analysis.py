@@ -1,18 +1,9 @@
-# analysis/event_impact_analysis.py
-
 import pandas as pd
 import matplotlib.pyplot as plt
 from models.utils_metrics import mad, mae, rmse, mape
+import matplotlib.dates as mdates
 
 def event_error_analysis(actual, forecast, events, plot_dir="img/", model_name="Modell"):
-    """
-    events: dict, z.B. {
-        "Covid (2020-2021)": ("2020-01-01", "2021-12-31"),
-        "Russland-Krieg (2022-)": ("2022-01-01", "2024-12-31")
-    }
-    actual, forecast: pd.Series (gleicher Index)
-    """
-
     error_results = {}
 
     for event, (start, end) in events.items():
@@ -34,15 +25,29 @@ def event_error_analysis(actual, forecast, events, plot_dir="img/", model_name="
 
         # Plot Forecast vs Actual für das Event
         plt.figure(figsize=(8, 3))
-        plt.plot(period_actual, label="Actual", color="blue", alpha=0.7)
-        plt.plot(period_forecast, label="Forecast", color="red", linestyle="--")
-        plt.title(f"{model_name} Forecast vs Actual: {event}")
-        plt.xlabel("Date")
-        plt.ylabel("Total Primary Energy Consumption")
+        plt.plot(period_actual, label="Actual", color="midnightblue", alpha=0.7, linewidth=3)
+        plt.plot(period_forecast, label="Forecast", color="tomato", linewidth=3, linestyle="--", alpha=0.9)
+
+        # Titel und Achsenbeschriftungen bold und größer
+        plt.title(f"{model_name} Forecast vs Actual: {event}", fontweight='bold', fontsize=16, pad=20)
+        plt.xlabel("")
+
+        # Zweizeiliges Y-Label (nur das erste bold, zweite Zeile nicht)
+        plt.ylabel("Energy Consumption\n(in Quadrillion BTU)", fontsize=10, fontweight='bold')
+        ax = plt.gca()
+        ax.spines['right'].set_visible(False)
+        ax.spines['top'].set_visible(False)
+
+        # X-Tick-Labels im Format "Jan 2020"
+        ax.xaxis.set_major_locator(mdates.MonthLocator(interval=5))  # alle 2 Monate
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %Y'))
+
+        plt.setp(ax.get_xticklabels(), fontsize=10)
+
         plt.legend()
         plt.tight_layout()
-        plt.savefig(f"{plot_dir}{model_name.lower()}_forecast_vs_actual_{event.replace(' ', '_').replace('(', '').replace(')', '').replace('-', '')}.png")
+        fname = f"{plot_dir}{model_name.lower()}_forecast_vs_actual_{event.replace(' ', '_').replace('(', '').replace(')', '').replace('-', '')}.png"
+        plt.savefig(fname)
         plt.close()
 
     return pd.DataFrame(error_results).T
-
