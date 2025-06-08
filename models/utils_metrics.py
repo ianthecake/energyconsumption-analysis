@@ -1,5 +1,3 @@
-# models/utils_metrics.py
-
 import numpy as np
 
 def mad(y_true, y_pred):

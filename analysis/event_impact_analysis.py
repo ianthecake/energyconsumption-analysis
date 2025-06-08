@@ -7,7 +7,6 @@ def event_error_analysis(actual, forecast, events, plot_dir="img/", model_name="
     error_results = {}
 
     for event, (start, end) in events.items():
-        # Zeitraum extrahieren
         period_actual = actual.loc[(actual.index >= start) & (actual.index <= end)]
         period_forecast = forecast.loc[(forecast.index >= start) & (forecast.index <= end)]
 
@@ -23,22 +22,18 @@ def event_error_analysis(actual, forecast, events, plot_dir="img/", model_name="
         }
         error_results[event] = result
 
-        # Plot Forecast vs Actual für das Event
         plt.figure(figsize=(8, 3))
         plt.plot(period_actual, label="Actual", color="midnightblue", alpha=0.7, linewidth=3)
         plt.plot(period_forecast, label="Forecast", color="tomato", linewidth=3, linestyle="--", alpha=0.9)
 
-        # Titel und Achsenbeschriftungen bold und größer
         plt.title(f"{model_name} Forecast vs Actual: {event}", fontweight='bold', fontsize=16, pad=20)
         plt.xlabel("")
 
-        # Zweizeiliges Y-Label (nur das erste bold, zweite Zeile nicht)
         plt.ylabel("Energy Consumption\n(in Quadrillion BTU)", fontsize=10, fontweight='bold')
         ax = plt.gca()
         ax.spines['right'].set_visible(False)
         ax.spines['top'].set_visible(False)
 
-        # X-Tick-Labels im Format "Jan 2020"
         ax.xaxis.set_major_locator(mdates.MonthLocator(interval=5))  # alle 2 Monate
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %Y'))
 

@@ -4,7 +4,6 @@ from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from models.utils_metrics import mad, mae, rmse, mape
 
 def holt_winters_forecast(series, train_end_year, test_end_year, seasonal='add', plot_dir="img/"):
-    # Split train/test
     train = series[(series.index.year <= train_end_year)]
     test = series[(series.index.year > train_end_year) & (series.index.year <= test_end_year)]
 
@@ -12,7 +11,6 @@ def holt_winters_forecast(series, train_end_year, test_end_year, seasonal='add',
     fit = model.fit()
     forecast = fit.forecast(len(test))
 
-    # Metrics
     actual = test.loc[forecast.index]
     results = {
         "mad": mad(actual, forecast),
@@ -23,19 +21,16 @@ def holt_winters_forecast(series, train_end_year, test_end_year, seasonal='add',
         "actual": actual,
     }
 
-    # Plot: Forecast vs Actual
     plt.figure(figsize=(12, 6))
     plt.plot(train, label="Train", color="grey", alpha=0.6, linewidth=1)
     plt.plot(actual, label="Actual", color="midnightblue", alpha=0.9, linestyle="-", linewidth=1.5)
     plt.plot(forecast, label="Forecast", color="tomato", linestyle="-", linewidth=1.1)
 
-    # Achsen und Titel fett und größer
     plt.title(f"Holt-Winters Forecast vs Actual ({train_end_year+1}-{test_end_year})", fontweight='bold', fontsize=16, pad=20)
     #plt.xlabel("Year", fontweight='bold', fontsize=13)
     plt.xlabel("")
     plt.ylabel("Total Energy Consumption\n(in Quadrillion BTU)", fontweight='bold', fontsize=12)
 
-    # Y-Achsenlabels: alle vier Jahre
     ax = plt.gca()
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)

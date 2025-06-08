@@ -1,5 +1,3 @@
-# analysis/model_comparison.py
-
 import pandas as pd
 
 def model_comparison_table(*results, model_names=None):
