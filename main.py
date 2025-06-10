@@ -7,6 +7,7 @@ from analysis.event_impact_analysis import event_error_analysis
 from analysis.error_analysis import error_over_time
 from analysis.model_comparison import model_comparison_table
 from analysis.error_heatmap import mape_heatmap
+from analysis import exploration
 
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -32,9 +33,10 @@ def load_series(path, col):
 
 
 if __name__ == "__main__":
-    # Daten laden
     series = load_series(DATA_PATH, COLUMN)
+    exploration.run_all_explorations(series)
 
+'''
     # Holt-Winters Modell
     hw_results = holt_winters_forecast(series, TRAIN_END_YEAR, TEST_END_YEAR)
     print("Holt-Winters Results:")
@@ -87,4 +89,8 @@ if __name__ == "__main__":
 
     df_hw_heatmap = mape_heatmap(hw_results["actual"], hw_results["forecast"], model_name="HoltWinters")
     df_sarima_heatmap = mape_heatmap(sarima_results["actual"], sarima_results["forecast"], model_name="SARIMA")
+    '''
+
+
+
 
