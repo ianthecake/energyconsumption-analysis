@@ -1,0 +1,373 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                       %%
+%% \/   \/  Zu ladende Pakete. Hier hinzufügen  \/   \/  %%
+%%                                                       %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Schriftgröße, Layout, Papierformat, Art des Dokumentes
+\documentclass[a4paper,11pt]{article}
+%Wähle Sans Serif Schrift aus
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{sansmath}
+\sansmath
+
+\usepackage{braket}
+\usepackage{wrapfig}
+
+\usepackage{parskip}
+\setlength{\parskip}{1em}
+\setlength{\parindent}{0em}
+
+\usepackage{subcaption}
+\usepackage{multirow}
+
+
+% Einstellungen der Seitenränder
+\usepackage[left=3.5cm,right=2cm,top=2cm,bottom=2cm,includehead]{geometry}
+
+% neue Rechtschreibung
+\usepackage[german]{babel}
+
+% deutsche Silbentrennung
+\usepackage{hyphenat}
+
+% Umlaute
+\usepackage[utf8]{inputenc}
+\usepackage[hyperfootnotes=false, pdfborder={0 0 0}]{hyperref}
+
+% pfd-Output [Fußnoten nicht verlinken]
+\usepackage[nottoc]{tocbibind}
+
+% Inhaltsverzeichniserweiterung (Inhaltsverzeichnis selbst ausblenden)
+\usepackage{makeidx}
+
+% Abkürzungsverzeichnis
+\usepackage[intoc]{nomencl}
+
+% Fancy Header
+\usepackage{fancyhdr}
+
+% For PDF include in the Appendix
+\usepackage{pdfpages}
+
+% Zitate (Erweiterung für Literaturverzeichnis)
+\usepackage[round]{natbib}
+
+% Zurücksetzen der Tabellen- und Abbildungsnummerierung je Sektion
+\usepackage{amsmath}
+
+% Bild- und Tabellenunterschrift (fett)
+\usepackage[labelfont=bf,aboveskip=1mm]{caption}
+
+% Zeilenabstand (vor footmisc laden!)
+\usepackage{setspace}
+
+% Fußnoten [Ausrichtung unten, Trennung durch Seperator bei mehreren Fußnoten]
+\usepackage[bottom,multiple,hang,marginal]{footmisc}
+
+% Umfließende Grafiken und Tabellen
+\usepackage{wrapfig}
+\usepackage{graphicx}  % Grafiken
+\usepackage{tabularx}  % erweiterte Tabellen
+\usepackage{longtable} % mehrseitige Tabellen
+\usepackage{color}     % Farben
+\usepackage{enumitem}  % Befehl setlist (Zeilenabstand für itemize Umgebung auf 1 setzen)
+\usepackage{listings} \lstset{language=html}  % Quelltexte
+\usepackage{zref}      % Verweise (Anhangsverweise)
+
+% Glossar (nach hyperref, inputenc, babel und ngerman)
+\usepackage[toc,style=altlist,translate=false]{glossaries}
+
+% Glossar: Übersetzung im TOC
+\usepackage{glossaries-babel}     											  
+\usepackage{wasysym}
+\usepackage{amssymb}
+\usepackage{xspace}
+\widowpenalty=300
+\clubpenalty=300
+\usepackage{multicol}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                       %%
+%% /\   /\  Zu ladende Pakete. Hier hinzufügen  /\   /\  %%
+%%                                                       %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------- Grundlegende Einstellungen ----------------------%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                     %%
+%% \/    Titel und Name eingeben  \/   %%
+%%                                     %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\myType{0}
+%% 0=Seminararbeit   %%
+%% 1=Projektarbeit   %%
+%% 2=Bachelorarbeit  %%
+%% 3=Projektdokumentation %%
+
+\def\myTopic{Analyse des Energieverbrauchs der Vereinigten Staaten}
+\def\mySubTopic{unter Berücksichtigung des Einflusses externer Ereignisse auf die Vorhersagegenauigkeit von ARIMA und Holt-Winters Modellen}
+\def\myAutor{Fabian Bauriedl}
+%\def\myFieldOfStudy{Data Science und KI}
+\def\myMatNr{9085643}
+\def\myKurs{RV-WDS123}
+%\def\myCompany{SAP SE}
+%\def\myCompanyAddressStreet{Dornierstraße 3}
+%\def\myCompanyAddressCity{88677 Markdorf}
+\def\myProf{Nölte}
+\def\myEndDate{20.06.2025}
+
+%% Seminararbeit / Allgemein %%
+\def\myVorlesung{Business Intelligence}
+
+%% Projektarbeit %%
+\def\myProjNumber{1}   % [1|2]
+\def\myPraxPhase{1}    % [1|2|3] StudienJAHR nicht Sems. !!!
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                     %%
+%%  /\    Titel und Name eingeben  /\  %%
+%%                                     %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%--------------- eigene Farbwerte definieren -------------------%
+\definecolor{boxgray}{gray}{0.9}         % Hintergrundfarbe für Zitatboxen
+\definecolor{commentgray}{gray}{0.5}     % Grau für Kommentare in Quelltexten
+\definecolor{darkgreen}{rgb}{0,.5,0}     % Grün für Strings in Quelltexten
+
+%-------------- Eigene Einstellungen definieren ----------------%
+% Definition von \gqq{#1: text}: Text in Anführungszeichen
+\newcommand{\gqq}[1]{\glqq #1\grqq}
+
+% Definition von \footref{#1: label}
+% Verweis auf bereits existierende Fußnoten mittels
+\providecommand*{\footref}[1]{
+	\begingroup
+		\unrestored@protected@xdef\@thefnmark{\ref{#1}}
+	\endgroup
+\@footnotemark}
+
+% Definition von \mypageref{#1: label}
+% Kombination aus \ref{#1: label} und \pageref{#1: label}
+\newcommand{\mypageref}[1]{\ref{#1} \nameref{#1} auf Seite \pageref{#1}}
+
+% Definition von \myboxquote{#1: text}
+% grau hinterlegte Quotation-Umgebung (für Zitate)
+\newcommand{\myboxquote}[1]{
+	\begin{quotation}
+		\colorbox{boxgray}{\parbox{0.78\textwidth}{#1}}
+	\end{quotation}
+	\vspace*{1mm}
+}
+
+% Definition von \vgl{#1}{#2}
+\newcommand{\vgl}[2][]{
+    vgl. \citeauthor{#2} (\citeyear{#2}\ifthenelse{\equal{#1}{}}{}{, S.~{#1}})\xspace
+}
+
+% Definition von \vglb{#1}{#2}
+\newcommand{\vglb}[2][]{
+    (vgl. \citeauthor{#2}, \citeyear{#2}\ifthenelse{\equal{#1}{}}{}{, S.~{#1}})\xspace
+}
+
+\makeatletter
+\zref@newprop*{appsec}{}
+\zref@addprop{main}{appsec}
+
+% Definition von \applabel{#1: label}{#2: text}
+% von \appsec{#1: text}{#2: label} zur Erzeugung des Labels verwendet)
+\def\applabel#1#2{%
+	\zref@setcurrent{appsec}{#2}%
+	\zref@wrapper@immediate{\zref@label{#1}}%
+}
+
+% Definition von \appref{#1: label}
+% anstelle \ref{#1: label} zum referenzieren von Anhängen verwenden)
+\def\appref#1{%
+	\hyperref[#1]{\zref@extract{#1}{appsec}}%
+}
+\makeatother
+
+% Definition von \appsection{#1: text}{#2: label}
+% Ersetzt \section{#1: text} und \label{#2: label} für Anhänge
+\newcommand{\theappsection}[1]{Anhang \Alph{section}:~\protect #1}
+\newcommand{\appsection}[2]{
+	\addtocounter{section}{1}
+	\phantomsection
+	\addcontentsline{toc}{section}{\theappsection{#1}}
+	\markboth{\theappsection{#1}}{}
+	\section*{\theappsection{#1}}
+	\applabel{#2}{Anhang \Alph{section}}
+	\label{#2}
+}
+
+%----------- Index, Glossar und Abbkürzungsverz. -----------%
+\makeindex
+\makenomenclature
+
+% Falls Glossar erstellt werden muss nachfolgende Zeile auskommentieren!
+%\makeglossaries
+
+% Festlegung der Art der Zitierung (Havardmethode: Abkuerzung Autor + Jahr) %
+\bibliographystyle{dinat}
+
+%----------------- PDF-Einstellungen ----------------------%
+
+\hypersetup{
+	bookmarksopen=false,
+	bookmarksnumbered=true,
+	bookmarksopenlevel=0,
+	pdftitle=\myTopic,
+	pdfsubject=\myTopic,
+	pdfauthor=\myAutor,
+	%nachfolgende Zeile wurde von Latex ignoriert!
+	%pdfborder=0,
+	pdfstartview=Fit,
+	pdfpagelayout=SinglePage
+}
+
+%--------------------- Kopfzeile --------------------------%
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+
+%-------------- Layout und Beschriftung ------------------%
+
+% Zeilenabstand: 1.5 (Standard: 1.2)
+\onehalfspacing                
+
+% Zeilenabstand für items auf 1 setzen
+\setlist{noitemsep}            
+
+% Tabllen- und Bildungsunterschriften ändern
+\addto\captionsngerman{
+  \renewcommand{\figurename}{Abb.}
+  \renewcommand{\tablename}{Tab.}
+}
+
+% Tabellennummerierung je Sektion zurücksetzen
+\numberwithin{table}{section}
+
+% Abbildungsnummerierung je Sektion zurücksetzen
+\numberwithin{figure}{section}
+
+ % Tabellennummerierung mit Section
+\renewcommand{\thetable}{\arabic{section}.\arabic{table}}
+
+% Abbildungsnummerierung mit Section
+\renewcommand{\thefigure}{\arabic{section}.\arabic{figure}}
+
+% Sektionsbezeichnung von Fußnoten entfernen
+\renewcommand{\thefootnote}{\arabic{footnote}}              
+
+% Mehrere Fußnoten durch ", " trennen
+\renewcommand{\multfootsep}{, }
+
+%--------------- Listingstyle ----------------------------%
+\lstset{
+	basicstyle=\ttfamily\scriptsize,
+	commentstyle=\color{commentgray}\textit,
+	showstringspaces=false,
+	stringstyle=\color{darkgreen},
+	keywordstyle=\color{blue},
+	numbers=left,
+	numberstyle=\tiny,
+	stepnumber=1,
+	numbersep=15pt,
+	tabsize=2,
+	fontadjust=true,
+	frame=single,
+	backgroundcolor=\color{boxgray},
+	captionpos=b,
+	linewidth=0.94\linewidth,
+	xleftmargin=0.1\linewidth,
+	breaklines=true,
+	aboveskip=16pt,
+	caption=\lstname
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                            %%
+%% \/    Bitte hier nur bei Bedarf Änderungen vornehmen  \/   %%
+%%                                                            %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Seiten und Kapitel einbinden
+\begin{document}
+	\pagenumbering{Roman}
+	% Das Titelblatt wird automatisch ausgewählt. Keine Änderung hier
+	\ifcase\myType
+		\include{pages/10_titel_seminar}
+	\or
+		\include{pages/10_titel_projekt}
+	\or
+		\include{pages/10_titel_bachelor}
+	\or
+		\include{pages/10_titel_projekt_doku}
+	\else
+	\fi
+
+	\pagestyle{fancy}
+	
+	% Sperrvermerk auskommentieren falls nicht notwendig
+	%\include{pages/11_sperrvermerk}			    
+	\include{pages/12_inhaltsverzeichnis}
+	\include{pages/13_abkuerzungsverzeichnis}
+	\include{pages/15_abbildungsverzeichnis}
+	
+	% Tabellenverzeichnis auskommentieren falls nicht notwendig
+	%\include{pages/16_tabellenverzeichnis}
+
+	% Kapitel
+	\pagestyle{fancy}
+	
+	% Kopfzeile links bzw. innen
+	\fancyhead[L]{\nouppercase{\rightmark}}   
+	\pagenumbering{arabic}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                                %%
+%% \/   \/ Bitte hier die Änderungen zur Arbeit vornehmen \/   \/ %%
+%%                                                                %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	%\include{chapter/glossary_collection}	% Glossar falls  benötigt
+
+	\input{chapter/00_Einleitung}
+	\input{chapter/01_Theorieteil}
+  \input{chapter/02_Datensatz}
+  \input{chapter/03_Implementierung}
+  \input{chapter/04_Ergebnisse}
+  \input{chapter/05_Event_Impact_Analysis}
+  \input{chapter/06_Interpretation}
+  \input{chapter/07_Schlussteil}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                         %%
+%% /\   Bis hier die Änderungen zur Arbeit vornehmen    /\ %%
+%%                                                         %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	% Anhang
+	% Tabellennummerierung mit Section
+	\renewcommand{\thetable}{\Alph{section}.\arabic{table}}
+	
+	% Abbildungsnummerierung mit Section
+	\renewcommand{\thefigure}{\Alph{section}.\arabic{figure}}
+
+	% Listingsnummerierung mit Section
+	\renewcommand{\thelstlisting}{\Alph{section}.\arabic{lstlisting}}
+	
+	% Abschluss
+	\include{pages/18_literaturverzeichnis}
+	\include{pages/20_erklaerung}
+	
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                        %%
+%% /\   /\  Ab hier keine Änderungen mehr vornehmen  /\   %%
+%%                                                        %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
