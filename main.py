@@ -1,5 +1,5 @@
 # main.py
-
+# https://www.kaggle.com/datasets/justinrwong/average-monthly-temperature-by-us-state?resource=download
 import pandas as pd
 from models.holt_winters import holt_winters_forecast
 from models.arima import arima_sarima_forecast
@@ -8,6 +8,7 @@ from analysis.error_analysis import error_over_time
 from analysis.model_comparison import model_comparison_table
 from analysis.error_heatmap import mape_heatmap
 from analysis import exploration
+from analysis import kausal_analyse
 
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -15,6 +16,7 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 
 DATA_PATH = "data/energyconsumption.csv"
+TEMP_PATH = "data/usa_monthly_temperature_1950-2022.csv"
 COLUMN = "Total Primary Energy Consumption"
 TRAIN_END_YEAR = 2014
 TEST_END_YEAR = 2024
@@ -31,10 +33,40 @@ def load_series(path, col):
     series = series.asfreq('MS')
     return series
 
+def load_temperature_series(path):
+    df = pd.read_csv(path)
+    df = df[df['year'].between(1973, 2022)]
+    df_grouped = df.groupby(['year', 'month'])['average_temp'].mean().reset_index()
+    df_grouped['Month'] = pd.to_datetime(df_grouped['year'].astype(str) + '-' + df_grouped['month'].astype(str))
+    df_grouped = df_grouped.sort_values('Month')
+    df_grouped.set_index('Month', inplace=True)
+    series = df_grouped['average_temp'].asfreq('MS')
+    return series
+
 
 if __name__ == "__main__":
     series = load_series(DATA_PATH, COLUMN)
-    exploration.run_all_explorations(series)
+    temp_series = load_temperature_series(TEMP_PATH)
+
+    #hw_results = holt_winters_forecast(series, TRAIN_END_YEAR, TEST_END_YEAR)
+    #sarima_results = arima_sarima_forecast(series, TRAIN_END_YEAR, TEST_END_YEAR)
+
+    #exploration.plot_combined_moving_averages(
+    #    actual=hw_results["actual"],
+    #    hw_forecast=hw_results["forecast"],
+    #    arima_forecast=sarima_results["forecast"]
+    #)
+
+    #print("Mean total energy consumption:", series.mean())
+
+    #sub_series = series.loc["2000-01":"2010-12"]
+    #sub_tempseries = temp_series.loc["2000-01":"2010-12"]
+
+    #exploration.plot_histogram(series)
+    #kausal_analyse.plot_energy_vs_temperature(series, temp_series)
+    kausal_analyse.plot_averages_comparison(series, temp_series)
+
+    #exploration.run_all_explorations(series)
 
 '''
     # Holt-Winters Modell

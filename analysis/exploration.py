@@ -21,6 +21,12 @@ def apply_plot_style(ax, title):
     plt.tight_layout()
 
 
+
+
+
+
+
+
 def plot_time_series(series):
     plt.figure(figsize=(12, 6))
     plt.plot(series, label="Energy Consumption", color="midnightblue", alpha=0.9, linewidth=1.5)
@@ -61,7 +67,13 @@ def plot_boxplot_by_month(series):
     df = series.copy().to_frame("value")
     df["month"] = df.index.month
     plt.figure(figsize=(12, 6))
-    sns.boxplot(x="month", y="value", data=df, palette="Blues")
+    sns.boxplot(
+        x="month",
+        y="value",
+        data=df,
+        color="steelblue",
+        medianprops={"color": "white", "linewidth": 1}
+    )
     ax = plt.gca()
     ax.set_xticklabels(["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"])
     apply_plot_style(ax, "Monthly Energy Consumption Distribution (Boxplot)")
@@ -70,12 +82,39 @@ def plot_boxplot_by_month(series):
 
 
 def plot_histogram(series):
+    import matplotlib.pyplot as plt
+    import os
+
     plt.figure(figsize=(12, 6))
     plt.hist(series, bins=20, color="midnightblue", edgecolor='white', alpha=0.8)
+
+    # Statistik
+    mean = series.mean()
+    median = series.median()
+    q10 = series.quantile(0.10)
+    q90 = series.quantile(0.90)
+
     ax = plt.gca()
-    apply_plot_style(ax, "Distribution of Energy Consumption")
+
+    # Linien einzeichnen
+    ax.axvline(mean, color='red', linestyle='--', linewidth=2, label=f'Mean: {mean:.2f}')
+    ax.axvline(median, color='green', linestyle='-.', linewidth=2, label=f'Median: {median:.2f}')
+    ax.axvline(q10, color='purple', linestyle=':', linewidth=2, label=f'Q10: {q10:.2f}')
+    ax.axvline(q90, color='purple', linestyle=':', linewidth=2, label=f'Q90: {q90:.2f}')
+
+    # Titel & Achsen
+    ax.set_title("Distribution of US energy consumption", fontweight='bold', fontsize=16, pad=20)
+    ax.set_xlabel("Energy consumption (in Quadrillion BTU)")
+    ax.set_ylabel("Month count", fontweight='bold', fontsize=12)
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    ax.legend()
+
+    plt.tight_layout()
     plt.savefig(os.path.join(IMG_DIR, "histogram.png"))
     plt.close()
+
+
 
 
 def plot_acf_pacf(series, lags=40):
@@ -96,6 +135,34 @@ def plot_decomposition(series, model='additive', freq=12):
     fig.tight_layout()
     plt.savefig(os.path.join(IMG_DIR, f"decomposition_{model}.png"))
     plt.close()
+
+
+def plot_combined_moving_averages(actual, hw_forecast, arima_forecast, plot_dir="img/"):
+    actual_ma = actual.rolling(window=12).mean()
+    hw_ma = hw_forecast.rolling(window=12).mean()
+    arima_ma = arima_forecast.rolling(window=12).mean()
+
+    plt.figure(figsize=(12, 6))
+    plt.plot(actual_ma, label="Moving Average (Actual)", color="midnightblue", linewidth=2)
+    plt.plot(hw_ma, label="Moving Average (Holt-Winters)", color="tomato", linestyle="--", linewidth=2)
+    plt.plot(arima_ma, label="Moving Average (SARIMA)", color="orange", linestyle="--", linewidth=2)
+
+    plt.title("Vergleich der Moving Averages", fontweight='bold', fontsize=16)
+    plt.xlabel("")
+    plt.ylabel("12-Monats Moving Average\nTotal Energy Consumption", fontweight='bold', fontsize=12)
+
+    ax = plt.gca()
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    ax.set_xlim(pd.Timestamp("2015-01-01"), pd.Timestamp("2024-12-31"))
+    ax.set_xticks(pd.date_range(start="2015-01-01", end="2024-12-31", freq="YS"))
+    ax.set_xticklabels([str(y.year) for y in pd.date_range("2015", "2024", freq="YS")], rotation=0)
+
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(f"{plot_dir}combined_forecast_ma_comparison.png")
+    plt.close()
+
 
 
 def run_all_explorations(series):
