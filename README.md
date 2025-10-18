@@ -1,2 +1,2 @@
 # energyconsumption-analysis
-US energy consumtion data analysis for my business intelligence class.
+analysis of US energy consumtion data for business intelligence class.
